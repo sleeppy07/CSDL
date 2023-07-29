@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2023 at 03:48 PM
+-- Generation Time: Jul 29, 2023 at 03:57 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -25,6 +25,30 @@ DELIMITER $$
 --
 -- Functions
 --
+CREATE DEFINER=`root`@`localhost` FUNCTION `TongDoanhThuNam1997` () RETURNS INT(11)  BEGIN
+    DECLARE `TongDoanhThu` INT;
+
+    SELECT SUM(CT.SoLuong * MH.DonGia * (1 - CT.GiamGia)) into `TongDoanhThu`
+    FROM DonDatHang DDH
+    JOIN ChiTietDDH CT ON DDH.MaDDH = CT.MaDDH
+    JOIN MatHang MH ON CT.MaMH = MH.MaMH
+    WHERE YEAR(DDH.NgayDH) = 1997;
+
+    RETURN `TongDoanhThu`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `TongDoanhThuTheoMaNV` (`MaNV` INT) RETURNS INT(11)  BEGIN
+    DECLARE `TongDoanhThu` INT;
+
+    SELECT  SUM(CT.SoLuong * MH.DonGia * (1 - CT.GiamGia)) into `TongDoanhThu`
+    FROM DonDatHang DDH
+    JOIN ChiTietDDH CT ON DDH.MaDDH = CT.MaDDH
+    JOIN MatHang MH ON CT.MaMH = MH.MaMH
+    WHERE DDH.MaNV = `MaNV`;
+
+    RETURN `TongDoanhThu`;
+END$$
+
 CREATE DEFINER=`root`@`localhost` FUNCTION `TongDoanhThuTheoNam` (`Nam` INT) RETURNS INT(11)  BEGIN
     DECLARE `TongDoanhThu` INT;
 
