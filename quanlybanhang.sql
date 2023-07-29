@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2023 at 12:14 PM
+-- Generation Time: Jul 29, 2023 at 03:48 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Database: `quanlybanhang`
 --
+
+DELIMITER $$
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `TongDoanhThuTheoNam` (`Nam` INT) RETURNS INT(11)  BEGIN
+    DECLARE `TongDoanhThu` INT;
+
+    SELECT SUM(CT.SoLuong * MH.DonGia * (1 - CT.GiamGia)) into `TongDoanhThu`
+    FROM DonDatHang DDH
+    JOIN ChiTietDDH CT ON DDH.MaDDH = CT.MaDDH
+    JOIN MatHang MH ON CT.MaMH = MH.MaMH
+    WHERE YEAR(DDH.NgayDH) = `Nam`;
+
+    RETURN `TongDoanhThu`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `TongThanhTienTheoMaDDH` (`MaDDH` CHAR(5)) RETURNS INT(11)  BEGIN
+    DECLARE `TongThanhTien` INT;
+
+    SELECT SUM(SoLuong * DonGia * (1 - GiamGia)) into `TongThanhTien`
+    FROM ChiTietDDH CT
+    JOIN MatHang MH ON CT.MaMH = MH.MaMH
+    WHERE CT.MaDDH = `MaDDH`;
+
+    RETURN `TongThanhTien`;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -172,6 +201,22 @@ INSERT INTO `khachhang` (`MaKH`, `TenKH`, `DiaChi`, `DienThoai`, `MaTP`) VALUES
 ('TRACODI', 'Đầu tư phát triển GTVT', '388 Hoà Hảo P5', '0976766', 'HP'),
 ('VITICO', 'Hoá Nhựa Vĩnh Tiến', '388 Hoà Hảo P5', '3987980', 'TP'),
 ('VTP', 'Vạn Hưng Phát', '388 Hoà Hảo P5', '3765768', 'HN');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `luuddh`
+--
+
+CREATE TABLE `luuddh` (
+  `MaDDH` int(11) NOT NULL,
+  `MaKH` varchar(10) NOT NULL,
+  `NgayDH` date NOT NULL,
+  `NgayGiao` date NOT NULL,
+  `MaMH` int(11) NOT NULL,
+  `Soluong` int(11) NOT NULL DEFAULT 0,
+  `GiamGia` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
