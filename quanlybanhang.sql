@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2023 at 03:57 PM
+-- Generation Time: Aug 02, 2023 at 05:13 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -22,6 +22,37 @@ SET time_zone = "+00:00";
 --
 
 DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `LietKeDonDatHangTheoKhoangThoiGian` (`NgayBatDau` DATE, `NgayKetThuc` DATE)   BEGIN
+    SELECT MaDDH, NgayDH, NgayGiao, MaKH, TenKH, MaMH, TenMH, SoLuong
+    FROM DonDatHang DDH
+    JOIN ChiTietDDH CT ON DDH.MaDDH = CT.MaDDH
+    JOIN MatHang MH ON CT.MaMH = MH.MaMH
+    JOIN KhachHang KH ON DDH.MaKH = KH.MaKH
+    WHERE NgayDH >= `NgayBatDau` AND NgayDH <= `NgayKetThuc`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `LietKeMatHangTheoMaDDH` (`MaDDH` CHAR(5))   BEGIN
+    SELECT MH.MaMH, MH.TenMH, CT.SoLuong
+    FROM MatHang MH
+    JOIN ChiTietDDH CT ON MH.MaMH = CT.MaMH
+    WHERE CT.MaDDH = `MaDDH`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `LietKeMatHangTheoNhaCungCap` (`MaNCC` INT)   BEGIN
+    SELECT MH.MaMH, MH.TenMH, MH.DonViTinh, MH.DonGia
+    FROM MatHang MH
+    WHERE MH.MaNCC = `MaNCC`;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `LietKeNhanVienTheoPhai` (`Phai` CHAR(1))   BEGIN
+    SELECT `MaNV`, `HoLot`, `TenNV`, `DiaChiNV`, `NgayNViec`, `Phai`
+    FROM nhanvien
+    WHERE Phai = `Phai`;
+END$$
+
 --
 -- Functions
 --
@@ -129,8 +160,8 @@ INSERT INTO `chitietddh` (`MaDDH`, `MaMH`, `SoLuong`, `GiamGia`) VALUES
 ('DDH04', 6, 3, '0000-00-00'),
 ('DDH05', 7, 2, '0000-00-00'),
 ('DDH05', 8, 5, '0000-00-00'),
-('DDH06', 7, 4, '0000-00-00'),
-('DDH07', 5, 2, '0000-00-00');
+('DDH08', 5, 2, '0000-00-00'),
+('DDH09', 7, 4, '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -158,8 +189,8 @@ INSERT INTO `dondathang` (`MaDDH`, `MaKH`, `MaNV`, `NgayDH`, `NgayGiao`) VALUES
 ('DDH05', 'SAMECO', 5, '2023-08-01', '2023-08-06'),
 ('DDH06', 'DHP', 6, '2023-08-02', '2023-08-07'),
 ('DDH07', 'SAMECO', 7, '2023-08-03', '2023-08-08'),
-('DDH08', 'DHP', 8, '2023-08-04', '2023-08-09'),
-('DDH09', 'VITICO', 9, '2023-08-05', '2023-08-10'),
+('DDH08', 'DHP', 8, '1997-08-04', '2023-08-09'),
+('DDH09', 'VITICO', 9, '1997-08-05', '2023-08-10'),
 ('DDH10', 'VTP', 10, '2023-08-06', '2023-08-11');
 
 -- --------------------------------------------------------
